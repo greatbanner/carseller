@@ -7,6 +7,13 @@ public class UnpublishDTO {
     private long dealer;
     
     public UnpublishDTO() {
+        super();
+    }
+
+    public UnpublishDTO(String reason, long listing, long dealer) {
+        this.reason = reason;
+        this.listing = listing;
+        this.dealer = dealer;
     }
 
     public String getReason() {

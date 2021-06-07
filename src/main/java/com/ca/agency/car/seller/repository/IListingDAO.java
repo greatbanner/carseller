@@ -16,4 +16,14 @@ public interface IListingDAO extends CrudRepository<Listing, Long>{
     value = "SELECT COUNT(l.id) FROM LISTING l WHERE l.state = 'PUBLISHED' and l.dealer = ?1", 
     nativeQuery = true)
     int countPublishedByDealer(long dealerId);
+
+    @Query(
+    value = "SELECT * FROM LISTING l WHERE l.state = 'PUBLISHED' and l.dealer = ?1 ORDER BY l.posting_date DESC LIMIT 1", 
+    nativeQuery = true)
+    Listing findOldestOnebyDealer(long dealerId);
+
+    @Query(
+    value = "SELECT * FROM LISTING l WHERE l.state = ?1 and l.dealer = ?2", 
+    nativeQuery = true)
+    List<Listing> findByStateAndDealer( String state,long dealerId);
 }

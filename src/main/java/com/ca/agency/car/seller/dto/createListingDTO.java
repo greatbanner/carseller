@@ -14,7 +14,17 @@ public class createListingDTO {
     private String model;
 
     public createListingDTO() {
+        super();
     }
+
+    public createListingDTO(long dealer, Double price, String brand, String model) {
+        this.dealer = dealer;
+        this.price = price;
+        this.brand = brand;
+        this.model = model;
+    }
+
+
 
     public long getDealer() {
         return dealer;

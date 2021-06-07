@@ -20,6 +20,7 @@ public class ExceptionResponseDTO {
     private String path;
 
     public ExceptionResponseDTO() {
+        super();
     }
 
     public String getTimestamp() {
