@@ -12,7 +12,8 @@ import com.ca.agency.car.seller.domain.ListingState;
 import com.ca.agency.car.seller.dto.HandleTierLimit;
 import com.ca.agency.car.seller.dto.PublishListingDTO;
 import com.ca.agency.car.seller.dto.UnpublishDTO;
-import com.ca.agency.car.seller.dto.createListingDTO;
+import com.ca.agency.car.seller.dto.UpdateListingDTO;
+import com.ca.agency.car.seller.dto.CreateListingDTO;
 import com.ca.agency.car.seller.exception.ServiceException;
 import com.ca.agency.car.seller.repository.IDealerDAO;
 import com.ca.agency.car.seller.repository.IListingDAO;
@@ -27,6 +28,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +51,7 @@ public class ManageListingServiceTests {
     @DisplayName("Listing should be created when a valid request is sent")
     public void shouldCreateListingWhenRequestIsValid() throws ServiceException{
         //Given:
-        var validCreateListingRequest = new createListingDTO();
+        var validCreateListingRequest = new CreateListingDTO();
         validCreateListingRequest.setBrand("Valid Brand");
         long validDealerId = 1;
         double validPrice = 3500.0;
@@ -73,7 +76,7 @@ public class ManageListingServiceTests {
     @DisplayName("Listing should not be created when the dealer do not exists")
     public void shouldNotCreateListingWhenDealerNotExists() {
         //Given:
-        var invalidCreateListingRequest = new createListingDTO();
+        var invalidCreateListingRequest = new CreateListingDTO();
         long invalidDealerId = 1;
         invalidCreateListingRequest.setDealer(invalidDealerId);
         //When:
@@ -194,6 +197,24 @@ public class ManageListingServiceTests {
     }
 
     @Test
+    @DisplayName("It should update listing when updateRequest is valid")
+    public void shouldUpdateListingWhenValid() throws ServiceException{
+        //Gien:
+        long validListingId = 1;
+        var validUpdateRequest = new UpdateListingDTO(validListingId, 3500.0, "Updated Brand", "Updated Model");
+        var validListing = getValidListing(validListingId, new Dealer());
+
+        Mockito.when(listingDaoMock.findById(validListingId)).thenReturn(Optional.of(validListing));
+        Mockito.when(listingDaoMock.save(validListing)).thenReturn(validListing);
+        //When:
+        var response = manageListingService.updateListing(validUpdateRequest);
+        //Then:
+        Assertions.assertThatNoException();
+        Assertions.assertThat(response.getBrand()).isEqualTo(validUpdateRequest.getBrand());
+        Assertions.assertThat(response.getModel()).isEqualTo(validUpdateRequest.getModel());
+    }
+
+    @Test
     @DisplayName("It should fail to publish a Listing when Listing not exists")
     public void shouldFailPublishListingWhenListingNotExists() {
         //Given:
@@ -272,23 +293,25 @@ public class ManageListingServiceTests {
 
     @Test
     @DisplayName("Should list Listing by seller and state when the seller exists")
-    public void shouldListListingWhenValidRequest(){
+    public void shouldListListingWhenValidRequest() throws ServiceException{
         //Given
         var validListingState = ListingState.DRAFT;
-        var validDealerId = 1;
-        var validListingId = 1;
+        long validDealerId = 1;
+        long validListingId = 1;
         var validDealer = getValidDealer(validDealerId);
         var listingResponse = getValidListing(validListingId, validDealer);
         //When
 
         List<Listing> listListingResponse = new ArrayList<>();
         listListingResponse.add(listingResponse);
-        Mockito.when(listingDaoMock.findByStateAndDealer(validListingState.label, validDealerId)).thenReturn(listListingResponse);
-        var response = manageListingService.listLisings(validDealerId, validListingState);
+        var paging = PageRequest.of(1, 10);
+        Mockito.when(dealerDaoMock.findById(validDealerId)).thenReturn(Optional.of(validDealer));
+        Mockito.when(listingDaoMock.findByStateAndDealer(validListingState, validDealer, paging)).thenReturn(new PageImpl<>(listListingResponse));
+        var response = manageListingService.listLisings(validDealerId, validListingState, paging);
         //Then
         Assertions.assertThatNoException();
-        Assertions.assertThat(response.size()).isEqualTo(1);
-        Assertions.assertThat(listingResponse).isEqualTo(response.get(0));
+        Assertions.assertThat(response.getContent().size()).isEqualTo(1);
+        Assertions.assertThat(listingResponse).isEqualTo(response.getContent().get(0));
     }
 
     private Dealer getValidDealer(long id){

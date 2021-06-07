@@ -1,13 +1,13 @@
 package com.ca.agency.car.seller.service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import com.ca.agency.car.seller.domain.Dealer;
 import com.ca.agency.car.seller.domain.Listing;
 import com.ca.agency.car.seller.domain.ListingState;
 import com.ca.agency.car.seller.domain.UnpublishReason;
-import com.ca.agency.car.seller.dto.createListingDTO;
+import com.ca.agency.car.seller.dto.CreateListingDTO;
+import com.ca.agency.car.seller.dto.UpdateListingDTO;
 import com.ca.agency.car.seller.dto.PublishListingDTO;
 import com.ca.agency.car.seller.dto.UnpublishDTO;
 import com.ca.agency.car.seller.exception.ServiceException;
@@ -16,6 +16,8 @@ import com.ca.agency.car.seller.repository.IListingDAO;
 import com.ca.agency.car.seller.repository.IUnpulishReasonDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,7 @@ public class ManageListingService {
         this.unpublishReasonDao = unpublishReasonDao;
     }
 
-    public Listing createListing(createListingDTO listingData) throws ServiceException {
+    public Listing createListing(CreateListingDTO listingData) throws ServiceException {
         
         var dealer = findDealer(listingData.getDealer());
 
@@ -84,8 +86,23 @@ public class ManageListingService {
         return listingDao.save(listingToUnpublish);
     }
 
-    public List<Listing> listLisings( long dealerId,ListingState state){
-        return listingDao.findByStateAndDealer(state.label, dealerId);
+    public Listing updateListing(UpdateListingDTO updateRequest) throws ServiceException{
+        var listingToUpdate = findListing(updateRequest.getId());
+        if(updateRequest.getBrand() != null){
+            listingToUpdate.setBrand(updateRequest.getBrand());
+        }
+        if(updateRequest.getModel() != null){
+            listingToUpdate.setModel(updateRequest.getModel());
+        }
+        if(updateRequest.getPrice() != null){
+            listingToUpdate.setPrice(updateRequest.getPrice());
+        }
+        return listingDao.save(listingToUpdate);
+    }
+
+    public Page<Listing> listLisings( long dealerId, ListingState state, Pageable pageable ) throws ServiceException{
+        var dealer = findDealer(dealerId);
+        return listingDao.findByStateAndDealer(state, dealer, pageable);
     }
 
     private Dealer findDealer(long dealerID) throws ServiceException{

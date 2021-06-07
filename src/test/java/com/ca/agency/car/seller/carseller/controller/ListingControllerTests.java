@@ -6,7 +6,8 @@ import com.ca.agency.car.seller.domain.Listing;
 import com.ca.agency.car.seller.domain.ListingState;
 import com.ca.agency.car.seller.dto.PublishListingDTO;
 import com.ca.agency.car.seller.dto.UnpublishDTO;
-import com.ca.agency.car.seller.dto.createListingDTO;
+import com.ca.agency.car.seller.dto.UpdateListingDTO;
+import com.ca.agency.car.seller.dto.CreateListingDTO;
 import com.ca.agency.car.seller.exception.ServiceException;
 import com.ca.agency.car.seller.service.ManageListingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,7 +59,7 @@ public class ListingControllerTests {
         var validPrice = 3500.0;
         var validBrand = "Brand";
         var validModel = "Model";
-        var createListingRequest = new createListingDTO(1, validPrice, validBrand, validModel);
+        var createListingRequest = new CreateListingDTO(1, validPrice, validBrand, validModel);
 
         var listingResponse = new Listing(new Dealer(), validPrice, ListingState.DRAFT, validBrand, validModel);
         long validListingId = 1;
@@ -75,11 +76,53 @@ public class ListingControllerTests {
     }
 
     @Test
+    @DisplayName("It should response Updated when do api/listing PUT with valid payload")
+    public void updateListing() throws Exception{
+        var validPrice = 3500.0;
+        var validBrand = "Brand";
+        var validModel = "Model";
+        var updateListingRequest = new UpdateListingDTO(1, validPrice, validBrand, validModel);
+
+        var listingResponse = new Listing(new Dealer(), validPrice, ListingState.DRAFT, validBrand, validModel);
+        long validListingId = 1;
+        listingResponse.setId(validListingId);
+        Mockito.when(serviceMock.updateListing(any())).thenReturn(listingResponse);
+
+        mockMvc.perform( MockMvcRequestBuilders
+            .put("/api/listing")
+            .content(asJsonString(updateListingRequest))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
+    }
+
+    
+    @Test
+    @DisplayName("It should response BadRequest when do api/listing PUT with valid payload")
+    public void updateListingFail() throws Exception{
+        var validPrice = 3500.0;
+        var validBrand = "Brand";
+        var validModel = "Model";
+        var updateListingRequest = new UpdateListingDTO(1, validPrice, validBrand, validModel);
+
+        Mockito.when(serviceMock.updateListing(any())).thenThrow(new ServiceException(HttpStatus.BAD_REQUEST,"Error message"));
+
+        mockMvc.perform( MockMvcRequestBuilders
+            .put("/api/listing")
+            .content(asJsonString(updateListingRequest))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("It should response BadRequest when do api/listing POST with invalid payload")
     public void createListingfail() throws Exception{
-        var createListingRequest = new createListingDTO(1, 3500.0, "validBrand", "validModel");
+        var createListingRequest = new CreateListingDTO(1, 3500.0, "validBrand", "validModel");
 
-        Mockito.when(serviceMock.createListing(any())).thenThrow(new ServiceException(HttpStatus.BAD_REQUEST, "exception message"));
+        Mockito.when(serviceMock.createListing(any())).thenThrow(new ServiceException(HttpStatus.BAD_REQUEST, "Error message"));
 
         mockMvc.perform( MockMvcRequestBuilders
             .post("/api/listing")
@@ -117,7 +160,7 @@ public class ListingControllerTests {
         long validListingId = 1;
         var publishRequest = new PublishListingDTO(validDealerId, validListingId);
 
-        Mockito.when(serviceMock.publishListing(any())).thenThrow(new ServiceException(HttpStatus.CONFLICT, "error message"));
+        Mockito.when(serviceMock.publishListing(any())).thenThrow(new ServiceException(HttpStatus.CONFLICT, "Error message"));
 
         mockMvc.perform( MockMvcRequestBuilders
         .post("/api/listing/publish")

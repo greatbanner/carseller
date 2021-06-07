@@ -4,11 +4,14 @@ import java.util.List;
 
 import com.ca.agency.car.seller.domain.Dealer;
 import com.ca.agency.car.seller.domain.Listing;
+import com.ca.agency.car.seller.domain.ListingState;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface IListingDAO extends CrudRepository<Listing, Long>{
+public interface IListingDAO extends PagingAndSortingRepository<Listing, Long>{
     
     List<Listing> findByDealer(Dealer dealer);
 
@@ -22,8 +25,5 @@ public interface IListingDAO extends CrudRepository<Listing, Long>{
     nativeQuery = true)
     Listing findOldestOnebyDealer(long dealerId);
 
-    @Query(
-    value = "SELECT * FROM LISTING l WHERE l.state = ?1 and l.dealer = ?2", 
-    nativeQuery = true)
-    List<Listing> findByStateAndDealer( String state,long dealerId);
+    Page<Listing> findByStateAndDealer( ListingState state,Dealer dealer, Pageable pageable);
 }

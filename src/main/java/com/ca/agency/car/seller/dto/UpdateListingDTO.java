@@ -3,9 +3,10 @@ package com.ca.agency.car.seller.dto;
 import io.swagger.annotations.ApiModelProperty;
 
 
-public class CreateListingDTO {
-    @ApiModelProperty(value = "Unique identification for a business that sells new or used cars.", example = "1")
-    private long dealer;
+public class UpdateListingDTO {
+
+    @ApiModelProperty(value = "Unique identification the listing to update.", example = "1")
+    private long id;
     @ApiModelProperty(value = "the value which the dealer consider for a car", example = "4500")
     private Double price;
     @ApiModelProperty(value = "The brand of the car", example = "Chevrolett")
@@ -13,25 +14,23 @@ public class CreateListingDTO {
     @ApiModelProperty(value = "The year of the car", example = "2018")
     private String model;
 
-    public CreateListingDTO() {
+    public UpdateListingDTO() {
         super();
     }
 
-    public CreateListingDTO(long dealer, Double price, String brand, String model) {
-        this.dealer = dealer;
+    public UpdateListingDTO(long id, Double price, String brand, String model) {
+        this.id = id;
         this.price = price;
         this.brand = brand;
         this.model = model;
     }
 
-
-
-    public long getDealer() {
-        return dealer;
+    public long getId() {
+        return id;
     }
 
-    public void setDealer(long dealer) {
-        this.dealer = dealer;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Double getPrice() {
