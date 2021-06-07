@@ -4,10 +4,11 @@ import org.springframework.http.HttpStatus;
 
 public class ServiceException extends Exception {
     
-	private HttpStatus httpStatusCode;
+	private final HttpStatus httpStatusCode;
 
     public ServiceException() {
 		super();
+		this.httpStatusCode = null;
 	}
 
     public ServiceException(HttpStatus httpStatusCode, String message) {

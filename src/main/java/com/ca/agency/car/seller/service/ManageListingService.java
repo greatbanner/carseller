@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ManageListingService {
+
+    private static final String DEFAULT_UNPUBLISH_REASON = "Tier limit reached";
     
     private final IListingDAO listingDao;
     private final IDealerDAO dealerDao;
@@ -47,12 +49,24 @@ public class ManageListingService {
         var dealer = findDealer(publishRequest.getDealer());
        
         if( dealer.getTier() == listingDao.countPublishedByDealer(publishRequest.getDealer()) ) {
-            throw new ServiceException( HttpStatus.CONFLICT,
-                "The Dealer has reached his Tier limit"
-            );
+            switch(publishRequest.getHandleTierLimit()){
+                case LIMIT_REACHED:
+                    throw new ServiceException( HttpStatus.CONFLICT,
+                        "The Dealer has reached his Tier limit"
+                    );
+                case UNPUBLISH_OLDEST:
+                    var listingToUnpublish = listingDao.findOldestOnebyDealer(publishRequest.getDealer());
+                    var unpublishRequest = new UnpublishDTO(DEFAULT_UNPUBLISH_REASON, listingToUnpublish.getId(), publishRequest.getDealer());
+                    unpublishListing(unpublishRequest);
+                    break;
+                default:
+                    throw new ServiceException( HttpStatus.CONFLICT,
+                        "The Dealer has reached his Tier limit"
+                    );
+            }
         }
 
-        Listing listingToPublish = findListing(publishRequest.getListing());
+        var listingToPublish = findListing(publishRequest.getListing());
         validateListingfromDealer(dealer, listingToPublish);
         listingToPublish.setPostingDate(LocalDate.now());                                 
         listingToPublish.setState(ListingState.PUBLISHED);
@@ -70,26 +84,23 @@ public class ManageListingService {
         return listingDao.save(listingToUnpublish);
     }
 
-    public List<Listing> listLisings(String sellerName){
-        var dealer= dealerDao.findByName(sellerName);
-        return listingDao.findByDealer(dealer);
+    public List<Listing> listLisings( long dealerId,ListingState state){
+        return listingDao.findByStateAndDealer(state.label, dealerId);
     }
 
     private Dealer findDealer(long dealerID) throws ServiceException{
-        var dealer = dealerDao.findById(dealerID)
+        return dealerDao.findById(dealerID)
         .orElseThrow(() -> new ServiceException( HttpStatus.BAD_REQUEST,
                     new  StringBuilder("Dealer with ID ")
                     .append(dealerID+"")
                     .append(" not found. Please verify").toString()));
-        return dealer;
     }
 
     private Listing  findListing(long listingID) throws ServiceException {
-        var listing = listingDao.findById(listingID).orElseThrow(() -> new ServiceException( HttpStatus.BAD_REQUEST,
+        return listingDao.findById(listingID).orElseThrow(() -> new ServiceException( HttpStatus.BAD_REQUEST,
                     new  StringBuilder("Listing with ID ")
                     .append(listingID+"")
                     .append(" not found. Please verify").toString()));
-        return listing;
     }
 
     private void validateListingfromDealer(Dealer dealer, Listing listing) throws ServiceException{

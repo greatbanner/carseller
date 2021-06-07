@@ -3,6 +3,7 @@ package com.ca.agency.car.seller.controller;
 import java.util.List;
 
 import com.ca.agency.car.seller.domain.Listing;
+import com.ca.agency.car.seller.domain.ListingState;
 import com.ca.agency.car.seller.dto.ExceptionResponseDTO;
 import com.ca.agency.car.seller.dto.createListingDTO;
 import com.ca.agency.car.seller.dto.PublishListingDTO;
@@ -28,7 +29,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController()
 @RequestMapping("/api/listing")
-@Api(value = "Listing", description = "REST API for Listing(a vehicle ad) ", tags = { "Listing" })
+@Api(value = "Listing", tags = { "Listing" })
 public class ListingController {
 
     private final ManageListingService manageListingService;
@@ -90,8 +91,8 @@ public class ListingController {
     }
      
     @GetMapping( produces = "application/json")
-    public List<Listing> findByDealer(@RequestParam String dealer) {
-        var listings = manageListingService.listLisings(dealer);
+    public List<Listing> findByDealer(@RequestParam long dealer, @RequestParam ListingState state) {
+        var listings = manageListingService.listLisings(dealer, state);
         return listings;
     }
 
