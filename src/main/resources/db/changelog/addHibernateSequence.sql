@@ -1,0 +1,1 @@
+CREATE SEQUENCE hibernate_sequence START WITH (Select (count(id) +1) from PUBLIC.listing);

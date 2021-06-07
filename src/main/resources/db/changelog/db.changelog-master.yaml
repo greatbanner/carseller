@@ -1,0 +1,31 @@
+databaseChangeLog:
+-  changeSet:
+        id:  create-listing-and-dealer-tables
+        author:  hbedoyao
+        changes:
+        -  sqlFile:
+            dbms:  'h2'
+            endDelimiter:  \nGO
+            splitStatements:  true
+            path:  /db/changelog/createListingAndDealerTables.sql
+            stripComments:  false
+-  changeSet:
+        id:  add-testing-data
+        author:  hbedoyao
+        changes:
+        -  sqlFile:
+            dbms:  'h2'
+            endDelimiter:  \nGO
+            splitStatements:  true
+            path:  /db/changelog/addTestingData.sql
+            stripComments:  false                    
+-  changeSet:
+        id:  add-hibernate-sequence
+        author:  hbedoyao
+        changes:
+        -  sqlFile:
+            dbms:  'h2'
+            endDelimiter:  \nGO
+            splitStatements:  true
+            path:  /db/changelog/addHibernateSequence.sql
+            stripComments:  false                    
