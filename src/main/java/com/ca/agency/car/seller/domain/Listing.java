@@ -34,6 +34,7 @@ public class Listing implements Serializable {
     private String model;
 
     public Listing() {
+        super();
     }
 
     public Listing(Dealer dealer, Double price, ListingState state, String brand, String model) {

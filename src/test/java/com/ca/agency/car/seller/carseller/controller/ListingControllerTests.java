@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,8 +30,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class ListingControllerTests {
@@ -207,6 +214,71 @@ public class ListingControllerTests {
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isConflict());
+    }
+    
+    @Test
+    @DisplayName("It should list Listing when valid payload")
+    public void listListing() throws Exception{
+        long validDealerId = 1;
+        var validState = ListingState.DRAFT;
+    
+        var listingResponse = new Listing(new Dealer(), 3450.0, ListingState.DRAFT, "validBrand", "validModel");
+        long validListingId = 1;
+        listingResponse.setId(validListingId);
+        List<Listing> listListingResponse = new ArrayList<>();
+        listListingResponse.add(listingResponse);
+
+        Mockito.when(serviceMock.listLisings(validDealerId, validState, null )).thenReturn(new PageImpl<>(listListingResponse));
+
+        mockMvc.perform( MockMvcRequestBuilders
+            .get("/api/listing")
+            .queryParam("dealer", validDealerId +"")
+            .queryParam("state", validState.label)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
+    }
+
+        
+    @Test
+    @DisplayName("It should list Listing when valid payload with pagination")
+    public void listListingWithPagination() throws Exception{
+        long validDealerId = 1;
+        var validState = ListingState.DRAFT;
+    
+        var listingResponse = new Listing(new Dealer(), 3450.0, ListingState.DRAFT, "validBrand", "validModel");
+        long validListingId = 1;
+        listingResponse.setId(validListingId);
+        List<Listing> listListingResponse = new ArrayList<>();
+        listListingResponse.add(listingResponse);
+
+        Mockito.when(serviceMock.listLisings(anyLong(), any(), any())).thenReturn(new PageImpl<>(listListingResponse));
+
+        mockMvc.perform( MockMvcRequestBuilders
+            .get("/api/listing")
+            .queryParam("dealer", validDealerId +"")
+            .queryParam("state", validState.label)
+            .queryParam("page", "1")
+            .queryParam("size", "2")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("It should fail to list Listing when service exception is thrown")
+    public void listListingFail() throws Exception{
+        long validDealerId = 1;
+        var validState = ListingState.DRAFT;
+
+        Mockito.when(serviceMock.listLisings(validDealerId, validState, null )).thenThrow(new ServiceException(HttpStatus.CONFLICT,"Error message"));
+
+        mockMvc.perform( MockMvcRequestBuilders
+            .get("/api/listing")
+            .queryParam("dealer", validDealerId +"")
+            .queryParam("state", validState.label)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isConflict());
     }
 
     public static String asJsonString(final Object obj) {

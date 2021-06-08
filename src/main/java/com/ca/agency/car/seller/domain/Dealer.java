@@ -19,6 +19,7 @@ public class Dealer implements Serializable {
     private String phone;
     
     public Dealer() {
+        super();
     }
 
     public long getId() {

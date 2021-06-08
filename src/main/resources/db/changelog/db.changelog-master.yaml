@@ -28,4 +28,14 @@ databaseChangeLog:
             endDelimiter:  \nGO
             splitStatements:  true
             path:  /db/changelog/addHibernateSequence.sql
+            stripComments:  false  
+-  changeSet:
+        id:  create-question-table
+        author:  hbedoyao
+        changes:
+        -  sqlFile:
+            dbms:  'h2'
+            endDelimiter:  \nGO
+            splitStatements:  true
+            path:  /db/changelog/createQuestionTable.sql
             stripComments:  false                    
