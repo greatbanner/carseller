@@ -12,19 +12,23 @@ public class CreateListingDTO {
     private String brand;
     @ApiModelProperty(value = "The year of the car", example = "2018")
     private String model;
+    @ApiModelProperty(value = "Short description about the car", example = "Selling brand new Chevrolett 2018")
+    private String shortDescription;
+    @ApiModelProperty(value = "Long description about the car", example = "Selling brand new Chevrolett 2018, 0 miles, you ask for a drive test")
+    private String longDescription;
 
     public CreateListingDTO() {
         super();
     }
 
-    public CreateListingDTO(long dealer, Double price, String brand, String model) {
+    public CreateListingDTO(long dealer, Double price, String brand, String model, String shortDescription, String longDescription) {
         this.dealer = dealer;
         this.price = price;
         this.brand = brand;
         this.model = model;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
     }
-
-
 
     public long getDealer() {
         return dealer;
@@ -56,6 +60,22 @@ public class CreateListingDTO {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
     }
 
 }

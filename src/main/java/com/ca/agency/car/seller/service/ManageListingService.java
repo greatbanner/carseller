@@ -42,7 +42,8 @@ public class ManageListingService {
         var dealer = findDealer(listingData.getDealer());
 
         var listing = new Listing(dealer, listingData.getPrice(),
-                            ListingState.DRAFT, listingData.getBrand(), listingData.getModel());
+                            ListingState.DRAFT, listingData.getBrand(), listingData.getModel(),
+                            listingData.getShortDescription(), listingData.getLongDescription());
 
         return listingDao.save(listing);
     }

@@ -15,6 +15,8 @@ CREATE TABLE listing (
     state varchar(10) NOT NULL,
     brand varchar(20) NOT NULL,
     model varchar(4) NOT NULL,
+    short_description varchar(50) NOT NULL,
+    long_description varchar(250) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (dealer) REFERENCES dealer(id)
 );

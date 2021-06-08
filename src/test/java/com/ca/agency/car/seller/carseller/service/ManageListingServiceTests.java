@@ -201,7 +201,7 @@ public class ManageListingServiceTests {
     public void shouldUpdateListingWhenValid() throws ServiceException{
         //Gien:
         long validListingId = 1;
-        var validUpdateRequest = new UpdateListingDTO(validListingId, 3500.0, "Updated Brand", "Updated Model");
+        var validUpdateRequest = new UpdateListingDTO(validListingId, 3500.0, "Updated Brand", "Updated Model", "validShortDescription", "validLongDescription");
         var validListing = getValidListing(validListingId, new Dealer());
 
         Mockito.when(listingDaoMock.findById(validListingId)).thenReturn(Optional.of(validListing));
@@ -325,7 +325,7 @@ public class ManageListingServiceTests {
     }
 
     private Listing getValidListing(long id, Dealer dealer){
-        var listing = new Listing(dealer, 3500.0, ListingState.PUBLISHED, "validBrand", "validModel");
+        var listing = new Listing(dealer, 3500.0, ListingState.PUBLISHED, "validBrand", "validModel", "validShortDescription", "validLongDescription");
         listing.setId(id);
         return listing;
     }

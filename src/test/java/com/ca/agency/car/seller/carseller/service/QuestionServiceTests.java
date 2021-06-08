@@ -148,7 +148,7 @@ public class QuestionServiceTests {
     }
 
     private Listing getValidListing(long id, Dealer dealer){
-        var listing = new Listing(dealer, 3500.0, ListingState.PUBLISHED, "validBrand", "validModel");
+        var listing = new Listing(dealer, 3500.0, ListingState.PUBLISHED, "validBrand", "validModel", "validShortDescription", "validLongDescription");
         listing.setId(id);
         return listing;
     }

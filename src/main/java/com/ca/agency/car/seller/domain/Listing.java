@@ -32,17 +32,21 @@ public class Listing implements Serializable {
     private ListingState state;
     private String brand;
     private String model;
+    private String shortDescription;
+    private String longDescription;
 
     public Listing() {
         super();
     }
 
-    public Listing(Dealer dealer, Double price, ListingState state, String brand, String model) {
+    public Listing(Dealer dealer, Double price, ListingState state, String brand, String model, String shortDescription, String longDescription) {
         this.dealer = dealer;
         this.price = price;
         this.state = state;
         this.brand = brand;
         this.model = model;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
     }
 
     public Double getPrice() {
@@ -99,6 +103,22 @@ public class Listing implements Serializable {
 
     public void setDealer(Dealer dealer) {
         this.dealer = dealer;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
     }
 
 }

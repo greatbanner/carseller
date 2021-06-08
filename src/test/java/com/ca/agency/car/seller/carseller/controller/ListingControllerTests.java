@@ -66,9 +66,12 @@ public class ListingControllerTests {
         var validPrice = 3500.0;
         var validBrand = "Brand";
         var validModel = "Model";
-        var createListingRequest = new CreateListingDTO(1, validPrice, validBrand, validModel);
+        var validShortDescription = "Valid short Description";
+        var validLongDescription = "Valid long Description";
 
-        var listingResponse = new Listing(new Dealer(), validPrice, ListingState.DRAFT, validBrand, validModel);
+        var createListingRequest = new CreateListingDTO(1, validPrice, validBrand, validModel, validShortDescription, validLongDescription);
+
+        var listingResponse = new Listing(new Dealer(), validPrice, ListingState.DRAFT, validBrand, validModel, validShortDescription, validLongDescription);
         long validListingId = 1;
         listingResponse.setId(validListingId);
         Mockito.when(serviceMock.createListing(any())).thenReturn(listingResponse);
@@ -88,9 +91,12 @@ public class ListingControllerTests {
         var validPrice = 3500.0;
         var validBrand = "Brand";
         var validModel = "Model";
-        var updateListingRequest = new UpdateListingDTO(1, validPrice, validBrand, validModel);
+        var validShortDescription = "Valid short Description";
+        var validLongDescription = "Valid long Description";
 
-        var listingResponse = new Listing(new Dealer(), validPrice, ListingState.DRAFT, validBrand, validModel);
+        var updateListingRequest = new UpdateListingDTO(1, validPrice, validBrand, validModel, validShortDescription, validLongDescription);
+
+        var listingResponse = new Listing(new Dealer(), validPrice, ListingState.DRAFT, validBrand, validModel, validShortDescription, validLongDescription);
         long validListingId = 1;
         listingResponse.setId(validListingId);
         Mockito.when(serviceMock.updateListing(any())).thenReturn(listingResponse);
@@ -112,7 +118,10 @@ public class ListingControllerTests {
         var validPrice = 3500.0;
         var validBrand = "Brand";
         var validModel = "Model";
-        var updateListingRequest = new UpdateListingDTO(1, validPrice, validBrand, validModel);
+        var validShortDescription = "Valid short Description";
+        var validLongDescription = "Valid long Description";
+
+        var updateListingRequest = new UpdateListingDTO(1, validPrice, validBrand, validModel, validShortDescription, validLongDescription);
 
         Mockito.when(serviceMock.updateListing(any())).thenThrow(new ServiceException(HttpStatus.BAD_REQUEST,"Error message"));
 
@@ -127,7 +136,7 @@ public class ListingControllerTests {
     @Test
     @DisplayName("It should response BadRequest when do api/listing POST with invalid payload")
     public void createListingfail() throws Exception{
-        var createListingRequest = new CreateListingDTO(1, 3500.0, "validBrand", "validModel");
+        var createListingRequest = new CreateListingDTO(1, 3500.0, "validBrand", "validModel", "shortDescription", "longDescription");
 
         Mockito.when(serviceMock.createListing(any())).thenThrow(new ServiceException(HttpStatus.BAD_REQUEST, "Error message"));
 
@@ -146,7 +155,7 @@ public class ListingControllerTests {
         long validListingId = 1;
         var publishRequest = new PublishListingDTO(validDealerId, validListingId);
 
-        var listingResponse = new Listing(new Dealer(), 3500.0, ListingState.PUBLISHED, "validBrand", "validModel");
+        var listingResponse = new Listing(new Dealer(), 3500.0, ListingState.PUBLISHED, "validBrand", "validModel", "validShortDescription", "validLongDescription");
         listingResponse.setId(validListingId);
 
         Mockito.when(serviceMock.publishListing(any())).thenReturn(listingResponse);
@@ -184,7 +193,7 @@ public class ListingControllerTests {
         long validListingId = 1;
         var unpublishRequest = new UnpublishDTO("valid reason", validDealerId, validListingId);
 
-        var listingResponse = new Listing(new Dealer(), 3500.0, ListingState.DRAFT, "validBrand", "validModel");
+        var listingResponse = new Listing(new Dealer(), 3500.0, ListingState.DRAFT, "validBrand", "validModel", "validShortDescription", "validLongDescription");
         listingResponse.setId(validListingId);
 
         Mockito.when(serviceMock.unpublishListing(any())).thenReturn(listingResponse);
@@ -222,7 +231,7 @@ public class ListingControllerTests {
         long validDealerId = 1;
         var validState = ListingState.DRAFT;
     
-        var listingResponse = new Listing(new Dealer(), 3450.0, ListingState.DRAFT, "validBrand", "validModel");
+        var listingResponse = new Listing(new Dealer(), 3450.0, ListingState.DRAFT, "validBrand", "validModel", "validShortDescription", "validLongDescription");
         long validListingId = 1;
         listingResponse.setId(validListingId);
         List<Listing> listListingResponse = new ArrayList<>();
@@ -245,7 +254,7 @@ public class ListingControllerTests {
         long validDealerId = 1;
         var validState = ListingState.DRAFT;
     
-        var listingResponse = new Listing(new Dealer(), 3450.0, ListingState.DRAFT, "validBrand", "validModel");
+        var listingResponse = new Listing(new Dealer(), 3450.0, ListingState.DRAFT, "validBrand", "validModel", "validShortDescription", "validLongDescription");
         long validListingId = 1;
         listingResponse.setId(validListingId);
         List<Listing> listListingResponse = new ArrayList<>();

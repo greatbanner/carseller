@@ -1,9 +1,14 @@
 package com.ca.agency.car.seller.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class UnpublishDTO {
 
+    @ApiModelProperty(value = "Reason why is the listing being unpublish", example = "1")
     private String reason;
+    @ApiModelProperty(value = "Unique identifier of the Listing to unpublish", example = "1")
     private long listing;
+    @ApiModelProperty(value = "Unique identifier of the dealer owner of the listing", example = "1")
     private long dealer;
     
     public UnpublishDTO() {
