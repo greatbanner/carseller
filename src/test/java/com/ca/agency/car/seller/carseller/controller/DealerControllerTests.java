@@ -1,5 +1,7 @@
 package com.ca.agency.car.seller.carseller.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import com.ca.agency.car.seller.controller.DealerController;
 import com.ca.agency.car.seller.domain.Dealer;
 import com.ca.agency.car.seller.dto.CreateDealerDTO;
@@ -22,7 +24,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static com.ca.agency.car.seller.carseller.controller.JsonUtil.asJsonString;
 
@@ -98,8 +103,7 @@ public class DealerControllerTests {
             .andExpect(status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
     }
-
-    
+   
     @Test
     @DisplayName("It should fail to update Dealer when serviceException is thrown")
     public void shouldFailUpdateDealer() throws Exception{
@@ -116,5 +120,24 @@ public class DealerControllerTests {
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isConflict());
+    }
+
+    @Test
+    @DisplayName("It should list Dealers when valid payload")
+    public void listDealers() throws Exception{
+        long validDealerId = 1;
+    
+        var validDealer = new Dealer("ValidName", 3, "ValidEmail", "ValidPhone");
+        validDealer.setId(validDealerId);
+        List<Dealer> listListingResponse = new ArrayList<>();
+        listListingResponse.add(validDealer);
+
+        Mockito.when(serviceMock.listDealers()).thenReturn(listListingResponse);
+
+        mockMvc.perform( MockMvcRequestBuilders
+            .get("/api/dealer")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1)));
     }
 }

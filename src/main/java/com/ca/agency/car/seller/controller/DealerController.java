@@ -1,5 +1,7 @@
 package com.ca.agency.car.seller.controller;
 
+import java.util.List;
+
 import com.ca.agency.car.seller.domain.Dealer;
 import com.ca.agency.car.seller.dto.CreateDealerDTO;
 import com.ca.agency.car.seller.dto.ExceptionResponseDTO;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,7 +23,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController()
 @RequestMapping("/api/dealer")
@@ -67,4 +71,10 @@ public class DealerController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(dealer);
     }
+
+    @GetMapping()
+    public List<Dealer> listDealers() {
+        return dealerService.listDealers();
+    }
+    
 }

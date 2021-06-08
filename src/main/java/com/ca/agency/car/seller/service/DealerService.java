@@ -1,5 +1,7 @@
 package com.ca.agency.car.seller.service;
 
+import java.util.List;
+
 import com.ca.agency.car.seller.domain.Dealer;
 import com.ca.agency.car.seller.dto.CreateDealerDTO;
 import com.ca.agency.car.seller.dto.UpdateDealerDTO;
@@ -48,5 +50,9 @@ public class DealerService {
             dealer.setTier(daelerRequest.getTier());
         }
         return dealerDao.save(dealer);
+    }
+
+    public List<Dealer> listDealers(){
+        return (List<Dealer>) dealerDao.findAll();
     }
 }

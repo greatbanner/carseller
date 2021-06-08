@@ -2,6 +2,8 @@ package com.ca.agency.car.seller.carseller.service;
 
 import static org.mockito.ArgumentMatchers.any;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.ca.agency.car.seller.domain.Dealer;
@@ -122,6 +124,21 @@ public class DealerServiceTests {
             Assertions.assertThat(e.getHttpStatusCode()).isEqualTo(HttpStatus.CONFLICT);
             Assertions.assertThat(e.getMessage()).isEqualTo("Email already in use");
         }
+    }
+
+    @Test
+    @DisplayName("It should list Dealers when request is valid")
+    public void shouldListDealer() throws ServiceException{
+        //Given:
+        var validDealer = getValidDealer();
+        List<Dealer> listDealerResponse = new ArrayList<>();
+        listDealerResponse.add(validDealer);
+        //When:
+        Mockito.when(dealerDaoMock.findAll()).thenReturn(listDealerResponse);
+        var response = dealerService.listDealers();
+        //Then:
+        Assertions.assertThatNoException();
+        Assertions.assertThat(response).isNotEmpty();
     }
 
     private Dealer getValidDealer(){

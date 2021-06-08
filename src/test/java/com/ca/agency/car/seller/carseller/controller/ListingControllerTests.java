@@ -238,8 +238,7 @@ public class ListingControllerTests {
             .andExpect(status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
     }
-
-        
+    
     @Test
     @DisplayName("It should list Listing when valid payload with pagination")
     public void listListingWithPagination() throws Exception{
