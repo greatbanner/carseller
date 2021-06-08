@@ -17,14 +17,14 @@ For building and running the application you need:
 
 There are several ways to run a Spring Boot application on your local machine. One way is to execute the `main` method in the `com.ca.agency.car.seller.CarSellerApplication` class from your IDE.
 
-Alternatively you can use the [Spring Boot Gradle plugin](https://spring.io/guides/gs/gradle/) like so:
+Alternatively, you can use the [Spring Boot Gradle plugin](https://spring.io/guides/gs/gradle/) like so:
 
 ```shell
 ./gradlew bootRun
 ```
 By default, the application will starts in port 8080.
 
-Aditionaly you can specify your prefered port as the following:
+Additionally you can specify your preferred port as the following:
 
 ```shell
 ./gradlew bootRun --args='--server.port=8888'
@@ -34,9 +34,9 @@ For more Information about this Rest API you can check on the [live documentatio
 
 ## Additional functionality
 
-You will find some extra features in the API which I belive will be of great value to the service, like the Question API, that enables the posibility to ask more information about the Listing and gives the hability to the Dealers to Answer this Questions.
+You will find some extra features in the API which I believe will be of great value to the service, like the Question API, which enables the possibility to ask more information about the Listing and gives the ability to the Dealers to Answer these Questions.
 
-More so, in order to gain some insights, I registered all the unpublishing events in the DataBase so the client can understand better why a Listing was unpublish.
+More so, to gain some insights, I registered all the unpublishing events in the DataBase so the client can understand better why a Listing was unpublish.
 
 ## Unit Testing
 
