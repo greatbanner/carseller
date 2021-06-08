@@ -47,6 +47,8 @@ This project uses [Jacoco Gradle Plugin](https://docs.gradle.org/current/usergui
 ```
 The resulted test coverage can be found at `build/reports/jacoco/test/html/index.html` 
 
+Below is the latest Jacoco Test Report:
+![image](https://user-images.githubusercontent.com/17863794/121126073-3082ff00-c7ed-11eb-97ff-a77d6342304b.png)
 
 
 ## Copyright
