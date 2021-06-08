@@ -22,6 +22,13 @@ public class Dealer implements Serializable {
         super();
     }
 
+    public Dealer(String name, int tier, String email, String phone) {
+        this.name = name;
+        this.tier = tier;
+        this.email = email;
+        this.phone = phone;
+    }
+
     public long getId() {
         return id;
     }

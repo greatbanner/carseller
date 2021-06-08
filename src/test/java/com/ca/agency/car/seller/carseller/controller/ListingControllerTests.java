@@ -10,7 +10,6 @@ import com.ca.agency.car.seller.dto.UpdateListingDTO;
 import com.ca.agency.car.seller.dto.CreateListingDTO;
 import com.ca.agency.car.seller.exception.ServiceException;
 import com.ca.agency.car.seller.service.ManageListingService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +34,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static com.ca.agency.car.seller.carseller.controller.JsonUtil.asJsonString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -281,12 +281,5 @@ public class ListingControllerTests {
             .andExpect(status().isConflict());
     }
 
-    public static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }    
   

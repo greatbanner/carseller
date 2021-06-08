@@ -8,7 +8,6 @@ import com.ca.agency.car.seller.dto.AnswerDTO;
 import com.ca.agency.car.seller.dto.QuestionDTO;
 import com.ca.agency.car.seller.exception.ServiceException;
 import com.ca.agency.car.seller.service.QuestionService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static com.ca.agency.car.seller.carseller.controller.JsonUtil.asJsonString;
 
 @ExtendWith(MockitoExtension.class)
 public class QuestionControllerTests {
@@ -113,13 +113,5 @@ public class QuestionControllerTests {
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isConflict());
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }
